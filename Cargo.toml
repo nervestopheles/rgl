@@ -1,0 +1,12 @@
+[package]
+name = "void"
+version = "0.1.0"
+edition = "2021"
+
+[profile.release]
+panic = 'abort'
+strip = true
+opt-level = 2
+# lto = "thin"
+
+[dependencies]
