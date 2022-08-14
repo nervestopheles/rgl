@@ -5,6 +5,9 @@ fn main() {
     println!("cargo:rustc-link-lib=dylib=glfw");
     println!("cargo:rustc-link-lib=dylib=GL");
 
+    println!("cargo:rerun-if-changed=build.rs");
+    println!("cargo:rerun-if-changed=Cargo.toml");
+
     let mut sources_path = env::var("CARGO_MANIFEST_DIR").unwrap();
     sources_path.push_str("/src");
     let path = PathBuf::from(sources_path);

@@ -1,7 +1,7 @@
 /.tmp/
+/.vscode/
 /target/
 
 *.swp
 Cargo.lock
 bindings.rs
-
