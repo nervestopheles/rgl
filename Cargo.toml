@@ -4,9 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 [profile.release]
+opt-level = 2
 panic = 'abort'
 strip = true
-opt-level = 2
-# lto = "thin"
+
+[build-dependencies]
+bindgen = "0.60.1"
 
 [dependencies]

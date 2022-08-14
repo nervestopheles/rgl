@@ -1,17 +1,20 @@
 use std::process::exit;
 
+#[allow(dead_code)]
+#[allow(non_snake_case)]
+#[allow(non_camel_case_types)]
 mod bindings;
 
-pub const TRUE: i32 = bindings::GLFW_TRUE;
-pub const FALSE: i32 = bindings::GLFW_FALSE;
+pub const TRUE: i32 = bindings::GLFW_TRUE as i32;
+pub const FALSE: i32 = bindings::GLFW_FALSE as i32;
 
-pub const CONTEXT_VERSION_MAJOR: i32 = bindings::GLFW_CONTEXT_VERSION_MAJOR;
-pub const CONTEXT_VERSION_MINOR: i32 = bindings::GLFW_CONTEXT_VERSION_MINOR;
+pub const CONTEXT_VERSION_MAJOR: i32 = bindings::GLFW_CONTEXT_VERSION_MAJOR as i32;
+pub const CONTEXT_VERSION_MINOR: i32 = bindings::GLFW_CONTEXT_VERSION_MINOR as i32;
 
-pub const OPENGL_PROFILE: i32 = bindings::GLFW_OPENGL_PROFILE;
-pub const OPENGL_CORE_PROFILE: i32 = bindings::GLFW_OPENGL_CORE_PROFILE;
+pub const OPENGL_PROFILE: i32 = bindings::GLFW_OPENGL_PROFILE as i32;
+pub const OPENGL_CORE_PROFILE: i32 = bindings::GLFW_OPENGL_CORE_PROFILE as i32;
 
-pub const RESIZABLE: i32 = bindings::GLFW_RESIZABLE;
+pub const RESIZABLE: i32 = bindings::GLFW_RESIZABLE as i32;
 
 pub use bindings::GLFWmonitor as Monitor;
 pub use bindings::GLFWwindow as Window;

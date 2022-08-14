@@ -50,5 +50,5 @@ fn main() {
     }
 
     glfw::terminate();
-    println!("Exit")
+    println!("Exit.")
 }

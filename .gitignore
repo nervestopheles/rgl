@@ -1,3 +1,7 @@
-target
-.tmp
+/.tmp/
+/target/
+
 *.swp
+Cargo.lock
+bindings.rs
+
