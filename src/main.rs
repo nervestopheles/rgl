@@ -5,7 +5,7 @@ use std::ffi::CString;
 use std::thread::sleep;
 use std::time::{Duration, Instant};
 
-const TITLE: &str = "obj v1";
+const TITLE: &str = "project void v1";
 
 fn main() {
     let nullptr: *const () = std::ptr::null();
@@ -29,6 +29,7 @@ fn main() {
         nullptr as *mut glfw::Monitor,
         nullptr as *mut glfw::Window,
     );
+    glfw::make_context_current(window);
 
     glfw::get_framebuffer_size(window, &mut width, &mut height);
     gl::view_port(0, 0, width, height);

@@ -23,7 +23,7 @@ pub fn init() -> i32 {
     let status = unsafe { bindings::glfwInit() };
     if status != TRUE {
         println!("GLFW not init, status: {status}\nExit.");
-        exit(0);
+        exit(-1);
     }
     status
 }
@@ -39,8 +39,17 @@ pub fn create_window(
     monitor: *mut Monitor,
     share: *mut Window,
 ) -> *mut Window {
-    // TODO: if return null ptr?
-    unsafe { bindings::glfwCreateWindow(width, height, title, monitor, share) }
+    let ptr = unsafe { bindings::glfwCreateWindow(width, height, title, monitor, share) };
+    if ptr == std::ptr::null_mut() as *mut Window {
+        println!("Failed to create GLFW window");
+        terminate();
+        exit(-1);
+    }
+    ptr
+}
+
+pub fn make_context_current(window: *mut Window) -> () {
+    unsafe { bindings::glfwMakeContextCurrent(window) }
 }
 
 pub fn get_framebuffer_size(window: *mut Window, width: &mut i32, height: &mut i32) -> () {
