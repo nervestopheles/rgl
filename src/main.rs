@@ -34,6 +34,8 @@ fn main() {
     glfw::get_framebuffer_size(window, &mut width, &mut height);
     gl::view_port(0, 0, width, height);
 
+    gl::clear_color(0.05, 0.0, 0.1, 0.0);
+
     let frametime = Duration::from_micros(16667);
     let mut now: Instant;
     let mut delta: Duration;
@@ -42,7 +44,9 @@ fn main() {
     while glfw::window_should_close(window) == 0 {
         now = Instant::now();
         glfw::poll_events();
-        /* */
+        {
+            gl::clear(gl::COLOR_BUFFER_BIT);
+        }
         glfw::swap_buffers(window);
         delta = now.elapsed();
         if frametime > delta {
