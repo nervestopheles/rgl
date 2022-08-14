@@ -15,6 +15,11 @@ fn main() {
 
     let mut width: i32 = 800;
     let mut height: i32 = 600;
+    let window: *mut glfw::Window;
+
+    let frametime = Duration::from_micros(16667);
+    let mut now: Instant;
+    let mut delta: Duration;
 
     glfw::init();
 
@@ -22,7 +27,7 @@ fn main() {
     glfw::window_hint(glfw::CONTEXT_VERSION_MINOR, 3);
     glfw::window_hint(glfw::OPENGL_PROFILE, glfw::OPENGL_CORE_PROFILE);
     glfw::window_hint(glfw::RESIZABLE, glfw::FALSE);
-    let window: *mut glfw::Window = glfw::create_window(
+    window = glfw::create_window(
         width,
         height,
         titleptr,
@@ -31,14 +36,12 @@ fn main() {
     );
     glfw::make_context_current(window);
 
+    glfw::set_key_callback(window, Some(exit_key_callback));
+
+    gl::clear_color(0.05, 0.0, 0.1, 0.8);
+
     glfw::get_framebuffer_size(window, &mut width, &mut height);
     gl::view_port(0, 0, width, height);
-
-    gl::clear_color(0.05, 0.0, 0.1, 0.0);
-
-    let frametime = Duration::from_micros(16667);
-    let mut now: Instant;
-    let mut delta: Duration;
 
     /* loop */
     while glfw::window_should_close(window) == 0 {
@@ -56,4 +59,16 @@ fn main() {
 
     glfw::terminate();
     println!("Exit.")
+}
+
+extern "C" fn exit_key_callback(
+    window: *mut glfw::Window,
+    key: i32,
+    _scancode: i32,
+    action: i32,
+    _mode: i32,
+) {
+    if key == glfw::KEY_ESCAPE && action == glfw::PRESS {
+        glfw::set_window_should_clouse(window, glfw::TRUE)
+    }
 }

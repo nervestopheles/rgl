@@ -16,8 +16,13 @@ pub const OPENGL_CORE_PROFILE: i32 = bindings::GLFW_OPENGL_CORE_PROFILE as i32;
 
 pub const RESIZABLE: i32 = bindings::GLFW_RESIZABLE as i32;
 
+pub const PRESS: i32 = bindings::GLFW_PRESS as i32;
+pub const KEY_ESCAPE: i32 = bindings::GLFW_KEY_ESCAPE as i32;
+
 pub use bindings::GLFWmonitor as Monitor;
 pub use bindings::GLFWwindow as Window;
+
+pub use bindings::GLFWkeyfun as Keyfun;
 
 pub fn init() -> i32 {
     let status = unsafe { bindings::glfwInit() };
@@ -60,6 +65,10 @@ pub fn window_should_close(window: *mut Window) -> i32 {
     unsafe { bindings::glfwWindowShouldClose(window) }
 }
 
+pub fn set_window_should_clouse(window: *mut Window, value: i32) -> () {
+    unsafe { bindings::glfwSetWindowShouldClose(window, value) }
+}
+
 pub fn swap_buffers(window: *mut Window) -> () {
     unsafe { bindings::glfwSwapBuffers(window) }
 }
@@ -70,4 +79,8 @@ pub fn poll_events() -> () {
 
 pub fn terminate() -> () {
     unsafe { bindings::glfwTerminate() }
+}
+
+pub fn set_key_callback(window: *mut Window, cbfun: Keyfun) -> Keyfun {
+    unsafe { bindings::glfwSetKeyCallback(window, cbfun) }
 }
