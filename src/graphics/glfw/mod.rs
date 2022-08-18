@@ -43,11 +43,12 @@ pub fn window_hint(hint: i32, value: i32) -> () {
 pub fn create_window(
     width: i32,
     height: i32,
-    title: *const i8,
+    title: *const u8,
     monitor: *mut Monitor,
     share: *mut Window,
 ) -> *mut Window {
-    let ptr = unsafe { bindings::glfwCreateWindow(width, height, title, monitor, share) };
+    let ptr =
+        unsafe { bindings::glfwCreateWindow(width, height, title as *const i8, monitor, share) };
     if ptr == std::ptr::null_mut() as *mut Window {
         println!("Failed to create GLFW window");
         terminate();

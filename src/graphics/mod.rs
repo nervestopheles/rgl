@@ -6,9 +6,15 @@ pub struct Resolution {
     pub height: i32,
 }
 
+impl Resolution {
+    pub fn new(width: i32, height: i32) -> Self {
+        Resolution { width, height }
+    }
+}
+
 pub struct Gdata {
     pub res: Resolution,
-    pub titleptr: *const i8,
+    pub titleptr: *const u8,
     pub window: *mut glfw::Window,
 }
 
@@ -16,8 +22,8 @@ impl Gdata {
     pub fn new(width: i32, height: i32) -> Self {
         let nullptr: *const () = std::ptr::null();
         Gdata {
-            res: Resolution { width, height },
-            titleptr: nullptr as *const i8,
+            res: Resolution::new(width, height),
+            titleptr: nullptr as *const u8,
             window: nullptr as *mut glfw::Window,
         }
     }

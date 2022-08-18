@@ -4,17 +4,16 @@ use graphics::glfw;
 
 use graphics::Gdata;
 
-use std::ffi::CString;
 use std::thread::sleep;
 use std::time::{Duration, Instant};
 
-const TITLE: &str = "project void v1";
-const FRAMETIME: u64 = 16667 * 2; /* 30 FPS */
+/* 30 FPS */
+const FRAMETIME: u64 = 16667 * 2;
+static TITLE: &str = "project void v1\0";
 
 fn main() {
-    let title: CString = CString::new(TITLE).unwrap();
     let mut gdata = Gdata::new(800, 600);
-    gdata.titleptr = title.as_ptr();
+    gdata.titleptr = TITLE.as_ptr();
 
     gdata = graphics::init(gdata);
 
