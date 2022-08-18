@@ -60,7 +60,7 @@ pub fn make_context_current(window: *mut Window) -> () {
     unsafe { bindings::glfwMakeContextCurrent(window) }
 }
 
-pub fn get_framebuffer_size(window: *mut Window, width: &mut i32, height: &mut i32) -> () {
+pub fn _get_framebuffer_size(window: *mut Window, width: &mut i32, height: &mut i32) -> () {
     unsafe { bindings::glfwGetFramebufferSize(window, width, height) }
 }
 
