@@ -69,7 +69,7 @@ pub fn window_should_close(window: *mut Window) -> i32 {
     unsafe { bindings::glfwWindowShouldClose(window) }
 }
 
-pub fn set_window_should_clouse(window: *mut Window, value: i32) -> () {
+pub fn set_window_should_close(window: *mut Window, value: i32) -> () {
     unsafe { bindings::glfwSetWindowShouldClose(window, value) }
 }
 

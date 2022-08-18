@@ -48,7 +48,6 @@ pub fn init(mut gdata: Gdata) -> Gdata {
     );
 
     glfw::make_context_current(window);
-    glfw::set_key_callback(window, Some(exit_key_callback));
 
     /* load opengl funcs */
     gl::load(glfw::get_proc_address);
@@ -60,14 +59,3 @@ pub fn init(mut gdata: Gdata) -> Gdata {
     gdata
 }
 
-extern "C" fn exit_key_callback(
-    window: *mut glfw::Window,
-    key: i32,
-    _scancode: i32,
-    action: i32,
-    _mode: i32,
-) {
-    if key == glfw::KEY_ESCAPE && action == glfw::PRESS {
-        glfw::set_window_should_clouse(window, glfw::TRUE)
-    }
-}
