@@ -5,6 +5,7 @@ use std::ffi::CString;
 use std::thread::sleep;
 use std::time::{Duration, Instant};
 
+const FRAMETIME: u64 = 16667 * 2; /* 30 FPS */
 const TITLE: &str = "project void v1";
 
 fn main() {
@@ -16,10 +17,6 @@ fn main() {
     let mut width: i32 = 800;
     let mut height: i32 = 600;
     let window: *mut glfw::Window;
-
-    let frametime = Duration::from_micros(16667);
-    let mut now: Instant;
-    let mut delta: Duration;
 
     glfw::init();
 
@@ -48,19 +45,9 @@ fn main() {
 
     let _vertices: [gl::float; 9] = [-0.5, -0.5, 0.0, 0.5, -0.5, 0.0, 0.0, 0.5, 0.0];
 
-    /* loop */
-    while glfw::window_should_close(window) == 0 {
-        now = Instant::now();
-        glfw::poll_events();
-        {
-            gl::clear(gl::COLOR_BUFFER_BIT);
-        }
-        glfw::swap_buffers(window);
-        delta = now.elapsed();
-        if frametime > delta {
-            sleep(frametime - delta);
-        }
-    }
+    mloop(window, || -> () {
+        gl::clear(gl::COLOR_BUFFER_BIT);
+    });
 
     glfw::terminate();
     println!("Exit.")
@@ -75,5 +62,30 @@ extern "C" fn exit_key_callback(
 ) {
     if key == glfw::KEY_ESCAPE && action == glfw::PRESS {
         glfw::set_window_should_clouse(window, glfw::TRUE)
+    }
+}
+
+/* main program loop */
+fn mloop(window: *mut glfw::Window, foo: fn()) {
+    let frametime = Duration::from_micros(FRAMETIME);
+    let mut now: Instant;
+    let mut delta: Duration;
+
+    loop {
+        if glfw::window_should_close(window) != 0 {
+            break;
+        }
+
+        now = Instant::now();
+        glfw::poll_events();
+
+        foo();
+
+        glfw::swap_buffers(window);
+        delta = now.elapsed();
+
+        if frametime > delta {
+            sleep(frametime - delta);
+        }
     }
 }
