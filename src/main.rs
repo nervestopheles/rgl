@@ -38,10 +38,15 @@ fn main() {
 
     glfw::set_key_callback(window, Some(exit_key_callback));
 
-    gl::clear_color(0.05, 0.0, 0.1, 0.8);
+    /* Load OpenGL funcs */
+    gl::load(glfw::get_proc_address);
+
+    gl::clear_color(0.05, 0.0, 0.15, 0.8);
 
     glfw::get_framebuffer_size(window, &mut width, &mut height);
     gl::view_port(0, 0, width, height);
+
+    let _vertices: [gl::float; 9] = [-0.5, -0.5, 0.0, 0.5, -0.5, 0.0, 0.0, 0.5, 0.0];
 
     /* loop */
     while glfw::window_should_close(window) == 0 {

@@ -1,3 +1,5 @@
+use std::ffi::c_void;
+use std::ffi::CString;
 use std::process::exit;
 
 #[allow(dead_code)]
@@ -22,6 +24,7 @@ pub const KEY_ESCAPE: i32 = bindings::GLFW_KEY_ESCAPE as i32;
 pub use bindings::GLFWmonitor as Monitor;
 pub use bindings::GLFWwindow as Window;
 
+pub use bindings::GLFWglproc as Glproc;
 pub use bindings::GLFWkeyfun as Keyfun;
 
 pub fn init() -> i32 {
@@ -83,4 +86,10 @@ pub fn terminate() -> () {
 
 pub fn set_key_callback(window: *mut Window, cbfun: Keyfun) -> Keyfun {
     unsafe { bindings::glfwSetKeyCallback(window, cbfun) }
+}
+
+pub fn get_proc_address(procname: &'static str) -> *const c_void {
+    let procname: CString = CString::new(procname).unwrap();
+    let procnameptr = procname.as_ptr();
+    unsafe { bindings::glfwGetProcAddress(procnameptr).unwrap() as *const c_void }
 }

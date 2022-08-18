@@ -2,6 +2,8 @@
 /.vscode/
 /target/
 
-*.swp
 Cargo.lock
-bindings.rs
+
+*.swp
+*.rs.bk
+*.pdb
