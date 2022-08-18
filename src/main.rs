@@ -1,6 +1,8 @@
-mod gl;
-mod glfw;
 mod graphics;
+use graphics::gl;
+use graphics::glfw;
+
+use graphics::Gdata;
 
 use std::ffi::CString;
 use std::thread::sleep;
@@ -11,9 +13,10 @@ const FRAMETIME: u64 = 16667 * 2; /* 30 FPS */
 
 fn main() {
     let title: CString = CString::new(TITLE).unwrap();
-    let titleptr = title.as_ptr();
+    let mut gdata = Gdata::new(800, 600);
+    gdata.titleptr = title.as_ptr();
 
-    let gdata: graphics::Gdata = graphics::init(800, 600, titleptr);
+    gdata = graphics::init(gdata);
 
     let _vertices: [gl::float; 9] = [-0.5, -0.5, 0.0, 0.5, -0.5, 0.0, 0.0, 0.5, 0.0];
 

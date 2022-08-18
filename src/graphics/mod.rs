@@ -1,5 +1,5 @@
-use crate::gl;
-use crate::glfw;
+pub mod gl;
+pub mod glfw;
 
 pub struct Resolution {
     pub width: i32,
@@ -8,10 +8,22 @@ pub struct Resolution {
 
 pub struct Gdata {
     pub res: Resolution,
+    pub titleptr: *const i8,
     pub window: *mut glfw::Window,
 }
 
-pub fn init(width: i32, height: i32, titleptr: *const i8) -> Gdata {
+impl Gdata {
+    pub fn new(width: i32, height: i32) -> Self {
+        let nullptr: *const () = std::ptr::null();
+        Gdata {
+            res: Resolution { width, height },
+            titleptr: nullptr as *const i8,
+            window: nullptr as *mut glfw::Window,
+        }
+    }
+}
+
+pub fn init(mut gdata: Gdata) -> Gdata {
     let nullptr: *const () = std::ptr::null();
     let window: *mut glfw::Window;
 
@@ -22,9 +34,9 @@ pub fn init(width: i32, height: i32, titleptr: *const i8) -> Gdata {
     glfw::window_hint(glfw::OPENGL_PROFILE, glfw::OPENGL_CORE_PROFILE);
     glfw::window_hint(glfw::RESIZABLE, glfw::FALSE);
     window = glfw::create_window(
-        width,
-        height,
-        titleptr,
+        gdata.res.width,
+        gdata.res.height,
+        gdata.titleptr,
         nullptr as *mut glfw::Monitor,
         nullptr as *mut glfw::Window,
     );
@@ -35,13 +47,11 @@ pub fn init(width: i32, height: i32, titleptr: *const i8) -> Gdata {
     /* load opengl funcs */
     gl::load(glfw::get_proc_address);
 
-    gl::view_port(0, 0, width, height);
+    gl::view_port(0, 0, gdata.res.width, gdata.res.height);
     gl::clear_color(0.05, 0.0, 0.1, 0.8);
 
-    Gdata {
-        window: window,
-        res: Resolution { width, height },
-    }
+    gdata.window = window;
+    gdata
 }
 
 extern "C" fn exit_key_callback(
