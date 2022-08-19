@@ -1,23 +1,10 @@
+include!("./include.rs");
+
 use std::path::Path;
-
-mod graphics;
-mod shaders;
-mod utils;
-
-use graphics::gl;
-use graphics::glfw;
-use graphics::Gdata;
-
-use shaders::Code;
-use shaders::Shader;
-
-use utils::exit;
-use utils::mloop;
 
 static TITLE: &str = "project void v1\0";
 
 fn main() {
-    let _nullptr: *const () = std::ptr::null();
     let mut gdata = Gdata::new(800, 600);
     gdata.titleptr = TITLE.as_ptr();
 
