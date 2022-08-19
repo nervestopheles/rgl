@@ -92,5 +92,8 @@ pub fn set_key_callback(window: *mut Window, cbfun: Keyfun) -> Keyfun {
 pub fn get_proc_address(procname: &'static str) -> *const c_void {
     let procname: CString = CString::new(procname).unwrap();
     let procnameptr = procname.as_ptr();
-    unsafe { bindings::glfwGetProcAddress(procnameptr).unwrap() as *const c_void }
+    unsafe {
+        bindings::glfwGetProcAddress(procnameptr).expect("OpenGL func ptr downloading failed.")
+            as *const c_void
+    }
 }

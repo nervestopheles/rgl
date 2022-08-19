@@ -29,7 +29,7 @@ impl Gdata {
     }
 }
 
-pub fn init(mut gdata: Gdata) -> Gdata {
+pub fn init(gdata: &mut Gdata) {
     let nullptr: *const () = std::ptr::null();
     let window: *mut glfw::Window;
 
@@ -39,6 +39,7 @@ pub fn init(mut gdata: Gdata) -> Gdata {
     glfw::window_hint(glfw::CONTEXT_VERSION_MINOR, 3);
     glfw::window_hint(glfw::OPENGL_PROFILE, glfw::OPENGL_CORE_PROFILE);
     glfw::window_hint(glfw::RESIZABLE, glfw::FALSE);
+
     window = glfw::create_window(
         gdata.res.width,
         gdata.res.height,
@@ -46,16 +47,12 @@ pub fn init(mut gdata: Gdata) -> Gdata {
         nullptr as *mut glfw::Monitor,
         nullptr as *mut glfw::Window,
     );
-
     glfw::make_context_current(window);
+    gdata.window = window;
 
     /* load opengl funcs */
     gl::load(glfw::get_proc_address);
 
     gl::view_port(0, 0, gdata.res.width, gdata.res.height);
     gl::clear_color(0.05, 0.0, 0.1, 0.8);
-
-    gdata.window = window;
-    gdata
 }
-

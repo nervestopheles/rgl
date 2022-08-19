@@ -20,9 +20,18 @@ fn main() {
     let _nullptr: *const () = std::ptr::null();
     let mut gdata = Gdata::new(800, 600);
     gdata.titleptr = TITLE.as_ptr();
-    gdata = graphics::init(gdata);
 
+    graphics::init(&mut gdata);
     glfw::set_key_callback(gdata.window, Some(utils::exit_key_callback));
+
+    let vertex = Shader::new(gl::VERTEX_SHADER);
+    {
+        let vertex_code = Code::new(Path::new("./src/shaders/glsl/default.vert"));
+        if let Err(log) = vertex.load_shader_code(vertex_code) {
+            println!("Vertex shader error!\n{}", log.1);
+            exit();
+        }
+    }
 
     let vertices: [gl::float; 9] = [-0.5, -0.5, 0.0, 0.5, -0.5, 0.0, 0.0, 0.5, 0.0];
     let vsize = std::mem::size_of::<gl::float>() * vertices.len();
@@ -36,15 +45,6 @@ fn main() {
         vertices.as_ptr() as *const (),
         gl::STATIC_DRAW,
     );
-
-    let vertex = Shader::new(gl::VERTEX_SHADER);
-    {
-        let vertex_code = Code::new(Path::new("./src/shaders/glsl/default.vert"));
-        if let Err(log) = vertex.load_shader_code(vertex_code) {
-            println!("Vertex shader error!\n{}", log.1);
-            exit();
-        }
-    }
 
     /* main program loop */
     mloop(gdata.window, || -> () {
