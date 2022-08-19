@@ -14,8 +14,16 @@ fn main() {
     let vertex = Shader::new(gl::VERTEX_SHADER);
     {
         let vertex_code = Code::new(Path::new("./src/shaders/glsl/default.vert"));
-        if let Err(log) = vertex.load_shader_code(vertex_code) {
+        if let Err(log) = vertex.load_shader_source_code(vertex_code) {
             println!("Vertex shader error!\n{}", log.1);
+            exit();
+        }
+    }
+    let fragment = Shader::new(gl::FRAGMENT_SHADER);
+    {
+        let fragment_code = Code::new(Path::new("./src/shaders/glsl/default.frag"));
+        if let Err(log) = fragment.load_shader_source_code(fragment_code) {
+            println!("Fragment shader error!\n{}", log.1);
             exit();
         }
     }

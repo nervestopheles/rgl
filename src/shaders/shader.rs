@@ -16,7 +16,7 @@ impl Shader {
         }
     }
 
-    pub fn load_shader_code(&self, code: Code) -> Result<(), (Option<Vec<i8>>, &str)> {
+    pub fn load_shader_source_code(&self, code: Code) -> Result<(), (Option<Vec<i8>>, &str)> {
         let codeptr = code.string.as_ptr() as *const i8;
         let ptrs = [codeptr];
 

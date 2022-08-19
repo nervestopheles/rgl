@@ -4,12 +4,16 @@ mod bindings;
 
 pub use bindings::load;
 
+pub use bindings::FALSE;
+
 pub use bindings::ARRAY_BUFFER;
 pub use bindings::COLOR_BUFFER_BIT;
-pub use bindings::COMPILE_STATUS;
-pub use bindings::FALSE;
-pub use bindings::INFO_LOG_LENGTH;
 pub use bindings::STATIC_DRAW;
+
+pub use bindings::COMPILE_STATUS;
+pub use bindings::INFO_LOG_LENGTH;
+
+pub use bindings::FRAGMENT_SHADER;
 pub use bindings::VERTEX_SHADER;
 
 pub use bindings::GLbitfield as bitfield;
