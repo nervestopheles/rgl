@@ -1,9 +1,5 @@
 use crate::glfw;
 
-use std::ffi::CString;
-use std::fs::File;
-use std::io::Read;
-use std::path::Path;
 use std::thread::sleep;
 use std::time::{Duration, Instant};
 
@@ -52,10 +48,3 @@ pub extern "C" fn exit_key_callback(
     }
 }
 
-/* reading full file in cstring */
-pub fn read_file(path: &Path) -> CString {
-    let mut file = File::open(path).expect("Cant open the file.");
-    let mut data = String::new();
-    file.read_to_string(&mut data).expect("Read file error.");
-    CString::new(data).expect("Cstring new() failed.")
-}
