@@ -12,6 +12,7 @@ pub use bindings::STATIC_DRAW;
 
 pub use bindings::COMPILE_STATUS;
 pub use bindings::INFO_LOG_LENGTH;
+pub use bindings::LINK_STATUS;
 
 pub use bindings::FRAGMENT_SHADER;
 pub use bindings::VERTEX_SHADER;
@@ -68,4 +69,28 @@ pub fn get_shaderiv(shader: uint, pname: enum_, params: *mut int) {
 
 pub fn get_shader_info_log(shader: uint, buf_size: sizei, length: *mut int, info_log: *mut char) {
     unsafe { bindings::GetShaderInfoLog(shader, buf_size, length, info_log) }
+}
+
+pub fn create_program() -> uint {
+    unsafe { bindings::CreateProgram() }
+}
+
+pub fn attach_shader(program: uint, shader: uint) {
+    unsafe { bindings::AttachShader(program, shader) }
+}
+
+pub fn link_program(program: uint) {
+    unsafe { bindings::LinkProgram(program) }
+}
+
+pub fn get_programiv(program: uint, pname: enum_, params: *mut int) {
+    unsafe { bindings::GetProgramiv(program, pname, params) }
+}
+
+pub fn get_program_info_log(program: uint, buf_size: sizei, length: *mut int, info_log: *mut char) {
+    unsafe { bindings::GetProgramInfoLog(program, buf_size, length, info_log) }
+}
+
+pub fn use_program(program: uint) {
+    unsafe { bindings::UseProgram(program) }
 }

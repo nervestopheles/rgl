@@ -6,7 +6,7 @@ use crate::shaders::code;
 use code::Code;
 
 pub struct Shader {
-    id: gl::uint,
+    pub id: gl::uint,
 }
 
 impl Shader {
