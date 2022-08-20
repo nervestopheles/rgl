@@ -77,9 +77,14 @@ fn main() {
     let vertices: [gl::float; 9] = [-0.5, -0.5, 0.0, 0.5, -0.5, 0.0, 0.0, 0.5, 0.0];
     let vsize = std::mem::size_of::<gl::float>() * vertices.len();
 
-    let mut vbo: gl::uint = 0;
-    gl::gen_buffers(1, &mut vbo);
-    gl::bind_buffer(gl::ARRAY_BUFFER, vbo);
+    let colors: [gl::float; 9] = [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0];
+    let csize = std::mem::size_of::<gl::float>() * colors.len();
+
+    let mut vbos = [0 as gl::uint; 2];
+    gl::gen_buffers(2, &mut vbos as *mut u32);
+
+    let vbuf = vbos[0];
+    gl::bind_buffer(gl::ARRAY_BUFFER, vbuf);
     gl::buffer_data(
         gl::ARRAY_BUFFER,
         vsize,
@@ -87,8 +92,30 @@ fn main() {
         gl::STATIC_DRAW,
     );
 
+    let cbuf = vbos[1];
+    gl::bind_buffer(gl::ARRAY_BUFFER, cbuf);
+    gl::buffer_data(
+        gl::ARRAY_BUFFER,
+        csize,
+        colors.as_ptr() as *const (),
+        gl::STATIC_DRAW,
+    );
+
+    let mut vao: gl::uint = 0;
+    gl::gen_vertex_arrays(1, &mut vao);
+    gl::bind_vertex_array(vao);
+
+    gl::enable_vertex_attrib_array(0);
+    gl::bind_buffer(gl::ARRAY_BUFFER, vbuf);
+    gl::vertex_atrib_pointer(0, 3, gl::FLOAT, gl::FALSE, 0, std::ptr::null());
+
+    gl::enable_vertex_attrib_array(1);
+    gl::bind_buffer(gl::ARRAY_BUFFER, cbuf);
+    gl::vertex_atrib_pointer(1, 3, gl::FLOAT, gl::FALSE, 0, std::ptr::null());
+
     /* main program loop */
     mloop(gdata.window, || -> () {
         gl::clear(gl::COLOR_BUFFER_BIT);
+        gl::draw_array(gl::TRIANGLES, 0, 3);
     });
 }

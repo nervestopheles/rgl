@@ -17,7 +17,12 @@ pub use bindings::LINK_STATUS;
 pub use bindings::FRAGMENT_SHADER;
 pub use bindings::VERTEX_SHADER;
 
+pub use bindings::TRIANGLES;
+
+pub use bindings::FLOAT;
+
 pub use bindings::GLbitfield as bitfield;
+pub use bindings::GLboolean as boolean;
 pub use bindings::GLchar as char;
 pub use bindings::GLclampf as clampf;
 pub use bindings::GLenum as enum_;
@@ -93,4 +98,40 @@ pub fn get_program_info_log(program: uint, buf_size: sizei, length: *mut int, in
 
 pub fn use_program(program: uint) {
     unsafe { bindings::UseProgram(program) }
+}
+
+pub fn gen_vertex_arrays(n: sizei, arrays: *mut uint) {
+    unsafe { bindings::GenVertexArrays(n, arrays) }
+}
+
+pub fn bind_vertex_array(array: uint) {
+    unsafe { bindings::BindVertexArray(array) }
+}
+
+pub fn enable_vertex_attrib_array(index: uint) {
+    unsafe { bindings::EnableVertexAttribArray(index) }
+}
+
+pub fn vertex_atrib_pointer(
+    index: uint,
+    size: int,
+    type_: enum_,
+    normalized: boolean,
+    stride: sizei,
+    pointer: *const (),
+) {
+    unsafe {
+        bindings::VertexAttribPointer(
+            index,
+            size,
+            type_,
+            normalized,
+            stride,
+            pointer as *const c_void,
+        )
+    }
+}
+
+pub fn draw_array(mode: enum_, first: int, count: sizei) {
+    unsafe { bindings::DrawArrays(mode, first, count) }
 }
