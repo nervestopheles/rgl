@@ -1,3 +1,5 @@
+static TITLE: &str = "project void v1\0";
+
 pub mod gl;
 pub mod glfw;
 
@@ -19,40 +21,36 @@ pub struct Gdata {
 }
 
 impl Gdata {
-    pub fn new(width: i32, height: i32) -> Self {
+    pub fn init(width: i32, height: i32) -> Self {
         let nullptr: *const () = std::ptr::null();
+
+        let windowptr: *mut glfw::Window;
+        let titleptr = TITLE.as_ptr();
+
+        glfw::init();
+
+        glfw::window_hint(glfw::CONTEXT_VERSION_MAJOR, 3);
+        glfw::window_hint(glfw::CONTEXT_VERSION_MINOR, 3);
+        glfw::window_hint(glfw::OPENGL_PROFILE, glfw::OPENGL_CORE_PROFILE);
+        glfw::window_hint(glfw::RESIZABLE, glfw::FALSE);
+
+        windowptr = glfw::create_window(
+            width,
+            height,
+            titleptr,
+            nullptr as *mut glfw::Monitor,
+            nullptr as *mut glfw::Window,
+        );
+        glfw::make_context_current(windowptr);
+
+        /* load opengl funcs */
+        gl::load(glfw::get_proc_address);
+        gl::clear_color(0.05, 0.0, 0.1, 0.8);
+
         Gdata {
             res: Resolution::new(width, height),
-            titleptr: nullptr as *const u8,
-            window: nullptr as *mut glfw::Window,
+            titleptr: TITLE.as_ptr(),
+            window: windowptr,
         }
     }
-}
-
-pub fn init(gdata: &mut Gdata) {
-    let nullptr: *const () = std::ptr::null();
-    let window: *mut glfw::Window;
-
-    glfw::init();
-
-    glfw::window_hint(glfw::CONTEXT_VERSION_MAJOR, 3);
-    glfw::window_hint(glfw::CONTEXT_VERSION_MINOR, 3);
-    glfw::window_hint(glfw::OPENGL_PROFILE, glfw::OPENGL_CORE_PROFILE);
-    glfw::window_hint(glfw::RESIZABLE, glfw::FALSE);
-
-    window = glfw::create_window(
-        gdata.res.width,
-        gdata.res.height,
-        gdata.titleptr,
-        nullptr as *mut glfw::Monitor,
-        nullptr as *mut glfw::Window,
-    );
-    glfw::make_context_current(window);
-    gdata.window = window;
-
-    /* load opengl funcs */
-    gl::load(glfw::get_proc_address);
-
-    gl::view_port(0, 0, gdata.res.width, gdata.res.height);
-    gl::clear_color(0.05, 0.0, 0.1, 0.8);
 }

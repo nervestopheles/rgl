@@ -1,9 +1,9 @@
-use std::ffi::CStr;
-
 use crate::gl;
 use crate::shaders::code;
+use crate::utils::exit;
 
 use code::Code;
+use std::path::Path;
 
 pub struct Shader {
     pub id: gl::uint,
@@ -16,7 +16,20 @@ impl Shader {
         }
     }
 
-    pub fn load_shader_source_code(&self, code: Code) -> Result<(), (Option<Vec<i8>>, &str)> {
+    pub fn prepare(shader_type: gl::enum_, path_to_code: &str, compile_error: &str) -> Shader {
+        let shader = Shader::new(shader_type);
+        let shader_code = Code::new(Path::new(path_to_code));
+        if let Err(log) = shader.load_shader_source_code(shader_code) {
+            println!(
+                "{compile_error}\n{}",
+                std::str::from_utf8(&log).expect("Not valid str buffer.")
+            );
+            exit();
+        }
+        shader
+    }
+
+    pub fn load_shader_source_code(&self, code: Code) -> Result<(), Vec<u8>> {
         let codeptr = code.string.as_ptr() as *const i8;
         let ptrs = [codeptr];
 
@@ -37,18 +50,24 @@ impl Shader {
             gl::get_shaderiv(self.id, gl::INFO_LOG_LENGTH, &mut log_len);
 
             if log_len > 0 {
-                let mut log = vec![0i8; log_len as usize];
-                let logptr = log.as_mut_ptr();
-
-                let mut written: gl::sizei = 0;
-
-                gl::get_shader_info_log(self.id, log_len, &mut written, logptr);
-                let logstr = unsafe { CStr::from_ptr(logptr) }
-                    .to_str()
-                    .expect("Not valid ptr.");
-                return Err((Some(log), logstr));
+                let mut log = vec![0u8; log_len as usize];
+                {
+                    let mut written: gl::sizei = 0;
+                    gl::get_shader_info_log(
+                        self.id,
+                        log_len,
+                        &mut written,
+                        log.as_mut_ptr() as *mut i8,
+                    );
+                    if written == 0 {
+                        return Err("Undefined error on write shader log to buffer"
+                            .as_bytes()
+                            .to_vec());
+                    }
+                }
+                return Err(log);
             }
-            return Err((None, "Shader compilation error with no log."));
+            return Err("Shader compilation error with no log.".as_bytes().to_vec());
         }
         Ok(())
     }

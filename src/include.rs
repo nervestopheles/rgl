@@ -6,7 +6,6 @@ use graphics::gl;
 use graphics::glfw;
 use graphics::Gdata;
 
-use shaders::Code;
 use shaders::Shader;
 
 use utils::exit;

@@ -1,36 +1,24 @@
 include!("./include.rs");
 
-use std::ffi::CStr;
-use std::path::Path;
-
-static TITLE: &str = "project void v1\0";
-
 fn main() {
-    let mut gdata = Gdata::new(800, 600);
-    gdata.titleptr = TITLE.as_ptr();
+    /* graphics init */
+    let gdata = Gdata::init(800, 600);
 
-    graphics::init(&mut gdata);
+    gl::view_port(0, 0, gdata.res.width, gdata.res.height);
     glfw::set_key_callback(gdata.window, Some(utils::exit_key_callback));
 
-    let vertex = {
-        let vertex = Shader::new(gl::VERTEX_SHADER);
-        let vertex_code = Code::new(Path::new("./src/shaders/glsl/default.vert"));
-        if let Err(log) = vertex.load_shader_source_code(vertex_code) {
-            println!("Vertex shader error!\n{}", log.1);
-            exit();
-        }
-        vertex
-    };
+    /* shader program init */
+    let vertex = Shader::prepare(
+        gl::VERTEX_SHADER,
+        "./src/shaders/glsl/default.vert",
+        "Vertex shader error!",
+    );
 
-    let fragment = {
-        let fragment = Shader::new(gl::FRAGMENT_SHADER);
-        let fragment_code = Code::new(Path::new("./src/shaders/glsl/default.frag"));
-        if let Err(log) = fragment.load_shader_source_code(fragment_code) {
-            println!("Fragment shader error!\n{}", log.1);
-            exit();
-        }
-        fragment
-    };
+    let fragment = Shader::prepare(
+        gl::FRAGMENT_SHADER,
+        "./src/shaders/glsl/default.frag",
+        "Fragment shader error!",
+    );
 
     let _shader_program = {
         let shader_program = gl::create_program();
@@ -54,16 +42,18 @@ fn main() {
             gl::get_programiv(shader_program, gl::INFO_LOG_LENGTH, &mut log_len);
 
             if log_len > 0 {
-                let mut log = vec![0i8; log_len as usize];
-                let logptr = log.as_mut_ptr();
+                let mut log = vec![0u8; log_len as usize];
 
                 let mut written: gl::sizei = 0;
+                gl::get_program_info_log(
+                    shader_program,
+                    log_len,
+                    &mut written,
+                    log.as_mut_ptr() as *mut i8,
+                );
 
-                gl::get_program_info_log(shader_program, log_len, &mut written, logptr);
-                let logstr = unsafe { CStr::from_ptr(logptr) }
-                    .to_str()
-                    .expect("Not valid ptr.");
-                println!("Log: {logstr}");
+                let logstr = std::str::from_utf8(&log).expect("Not valid str buffer.");
+                println!("{logstr}");
             } else {
                 println!("Shader program linking error with no log.");
             }
@@ -74,6 +64,7 @@ fn main() {
         shader_program
     };
 
+    /* data init */
     let vertices: [gl::float; 9] = [-0.5, -0.5, 0.0, 0.5, -0.5, 0.0, 0.0, 0.5, 0.0];
     let vsize = std::mem::size_of::<gl::float>() * vertices.len();
 
